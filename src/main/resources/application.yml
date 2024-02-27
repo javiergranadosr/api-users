@@ -1,0 +1,10 @@
+server:
+  port: 8081
+spring:
+  # Swagger configuration
+  # http://localhost:8081/swagger-ui/index.html#/
+  mvc:
+    pathMatch:
+      matchingStrategy: ant-path-matcher
+  profiles:
+    active: dev
