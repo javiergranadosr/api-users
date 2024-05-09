@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IUserService {
     Page<UserResponseRecord> findAllWithPagination(int page, int size, String orderBy, String order);
-    List<UserResponseRecord> findAll();
+    List<UserResponseRecord> findAll(Long roleId);
     UserResponseRecord findById(Long id);
     ResponseMessageRecord create(UserRequestRecord data);
     ResponseMessageRecord update(Long id, UserRequestRecord data);

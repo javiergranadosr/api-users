@@ -5,12 +5,13 @@ import java.util.Set;
 
 public record UserResponseRecord(
         Long id,
-        Set<String> roles,
+        Set<RoleListResponseRecord> roles,
         String name,
         String lastname,
         String username,
         String email,
         String telephone,
+        Long phoneCodeId,
         LocalDate createdAt,
         LocalDate updatedAt
 ) {

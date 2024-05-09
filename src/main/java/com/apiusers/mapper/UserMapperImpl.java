@@ -1,10 +1,13 @@
 package com.apiusers.mapper;
 
+import com.apiusers.entity.PhoneCodeEntity;
 import com.apiusers.entity.RoleEntity;
 import com.apiusers.entity.UserEntity;
 import com.apiusers.exception.ErrorNotFound;
 import com.apiusers.record.request.UserRequestRecord;
+import com.apiusers.record.response.RoleListResponseRecord;
 import com.apiusers.record.response.UserResponseRecord;
+import com.apiusers.repository.PhoneCodeRepository;
 import com.apiusers.repository.RoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,7 +18,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserMapperImpl implements IUserMapper{
 
-    private RoleRepository repository;
+    private final RoleRepository repository;
+    private final PhoneCodeRepository phoneCodeRepository;
 
     @Override
     public UserEntity userRequestRecordToUserEntity(UserRequestRecord userRequestRecord) {
@@ -30,6 +34,10 @@ public class UserMapperImpl implements IUserMapper{
             );
             roles.add(role);
         }
+
+        PhoneCodeEntity phoneCodeEntity = this.phoneCodeRepository.findById(userRequestRecord.phoneCodeId())
+                .orElseThrow(() -> new ErrorNotFound("PhoneCode not found try again."));
+
         return new UserEntity(
                 null,
                 roles,
@@ -38,6 +46,7 @@ public class UserMapperImpl implements IUserMapper{
                 userRequestRecord.username(),
                 userRequestRecord.email(),
                 userRequestRecord.telephone(),
+                phoneCodeEntity,
                 null,
                 null
         );
@@ -47,17 +56,18 @@ public class UserMapperImpl implements IUserMapper{
     public UserResponseRecord userEntityToUserResponseRecord(UserEntity userEntity) {
         if (userEntity == null) {return null;}
 
-        Set<String> rolesDescription = new HashSet<>();
-        userEntity.getRoles().forEach( r -> rolesDescription.add(r.getDescription()));
+        Set<RoleListResponseRecord> roles = new HashSet<>();
+        userEntity.getRoles().forEach( r ->  roles.add(new RoleListResponseRecord(r.getId(), r.getDescription())));
 
         return new UserResponseRecord(
                 userEntity.getId(),
-                rolesDescription,
+                roles,
                 userEntity.getName(),
                 userEntity.getLastname(),
                 userEntity.getUsername(),
                 userEntity.getEmail(),
                 userEntity.getTelephone(),
+                userEntity.getPhoneCodeEntity().getId(),
                 userEntity.getCreatedAt(),
                 userEntity.getUpdatedAt()
         );

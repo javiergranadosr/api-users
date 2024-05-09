@@ -33,8 +33,12 @@ public class UserController {
     }
 
     @GetMapping( value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserResponseRecord>> findAll() {
-        return new ResponseEntity<>(this.service.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<UserResponseRecord>> findAll(@RequestParam(
+            name = "roleId",
+            defaultValue = "0",
+            required = false
+    ) Long roleId) {
+        return new ResponseEntity<>(this.service.findAll(roleId), HttpStatus.OK);
     }
 
     @GetMapping( value =  "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

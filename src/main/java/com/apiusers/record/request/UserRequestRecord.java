@@ -23,6 +23,9 @@ public record UserRequestRecord(
         @Size(max = 20)
         String telephone,
 
+        @NotNull(message = "Phone code is mandatory")
+        Long phoneCodeId,
+
         @NotEmpty(message = "Role is mandatory")
         Set<Integer> roles
 ) {

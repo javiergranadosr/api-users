@@ -44,6 +44,9 @@ public class UserEntity {
     private String email;
     @Column(name = "telephone", nullable = false, length = 20)
     private String telephone;
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = PhoneCodeEntity.class)
+    @JoinColumn(name = "phone_code_id", nullable = false, unique = false, referencedColumnName = "id")
+    private PhoneCodeEntity phoneCodeEntity;
 
     @CreationTimestamp
     private LocalDate createdAt;

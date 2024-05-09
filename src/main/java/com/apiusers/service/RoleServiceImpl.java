@@ -32,14 +32,14 @@ public class RoleServiceImpl  implements  IRoleService{
         log.info("RoleServiceImpl call method findAllWithPagination()");
         Sort.Direction direction = order.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         Page<RoleEntity> data = this.repository.findAll(PageRequest.of(page, size, Sort.by(direction, orderBy)));
-        return data.map(r-> this.roleMapper.roleEntityToRoleResponseRecord(r));
+        return data.map(this.roleMapper::roleEntityToRoleResponseRecord);
     }
 
     @Override
     public List<RoleResponseRecord> findAll() {
         log.info("RoleServiceImpl call method findAll()");
         List<RoleEntity> data = this.repository.findAll();
-        return data.stream().map( r -> this.roleMapper.roleEntityToRoleResponseRecord(r)).collect(Collectors.toList());
+        return data.stream().map(this.roleMapper::roleEntityToRoleResponseRecord).toList();
     }
 
     @Override
