@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost/api_users?useSSL=false
+    url: jdbc:mysql://localhost/api_users?useSSL=false&sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false
     username: root
     password: admin
     driverClassName: com.mysql.cj.jdbc.Driver
@@ -13,12 +13,17 @@ spring:
     locale: es_MX
   servlet:
     multipart:
+      # Habilitamos carga de archivos multipart
+      enabled: true
       # Maximo archivos permitidos
-      max-file-size: 15MB
+      max-file-size: 2MB
       # Maximo archivos permitidos en la solicitud request
-      max-request-size: 15MB
+      max-request-size: 2MB
 logging:
   level:
     org:
       hibernate:
         SQL: debug
+media:
+  location: src/main/resources/files
+

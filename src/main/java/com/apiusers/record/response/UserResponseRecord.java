@@ -12,6 +12,7 @@ public record UserResponseRecord(
         String email,
         String telephone,
         Long phoneCodeId,
+        String urlProfilePhoto,
         LocalDate createdAt,
         LocalDate updatedAt
 ) {

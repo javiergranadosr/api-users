@@ -44,7 +44,7 @@ public class UserServiceImpl  implements IUserService{
     @Override
     public List<UserResponseRecord> findAll(Long roleId) {
         log.info("UserServiceImpl call method findAll()");
-        List<UserEntity> users = null;
+        List<UserEntity> users ;
         if (roleId > 0) {
             users = this.userRepository.findAllUsersByRoleId(roleId);
         }else {
