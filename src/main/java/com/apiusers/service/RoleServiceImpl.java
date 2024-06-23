@@ -6,6 +6,8 @@ import com.apiusers.mapper.IRoleMapper;
 import com.apiusers.record.request.RoleRequestRecord;
 import com.apiusers.record.response.ResponseMessageRecord;
 import com.apiusers.record.response.RoleResponseRecord;
+import com.apiusers.record.response.TotalUserByRolQueryResponseRecord;
+import com.apiusers.record.response.TotalUserByRolResponseRecord;
 import com.apiusers.repository.RoleRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -14,10 +16,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Log4j2
@@ -26,6 +29,7 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl  implements  IRoleService{
     private final RoleRepository repository;
     private final IRoleMapper roleMapper;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public Page<RoleResponseRecord> findAllWithPagination(int page, int size, String orderBy, String order) {
@@ -78,5 +82,30 @@ public class RoleServiceImpl  implements  IRoleService{
                 .orElseThrow( () -> new ErrorNotFound("Permission not found try again"));
         this.repository.delete(roleEntity);
         return new ResponseMessageRecord(HttpStatus.OK.value(), "Permission deleted successfully");
+    }
+
+    @Override
+    public TotalUserByRolResponseRecord findTotalRoles() {
+        log.info("RoleServiceImpl call method getTotalRolesByRoleId()");
+        String query = """
+                    select r.name , r.description ,COUNT(r.id) as total from roles r
+                    inner join users_roles ur on ur.role_id  = r.id
+                    group by r.id
+                """;
+        List<TotalUserByRolQueryResponseRecord> users = this.jdbcTemplate.query(query, (rs, row) -> new TotalUserByRolQueryResponseRecord(
+                rs.getString("name"),
+                rs.getString("description"),
+                rs.getInt("total")
+        ));
+        List<String> labelRoles = new ArrayList<>();
+        List<Integer> total = new ArrayList<>();
+        users.forEach( u ->{
+            labelRoles.add(u.description());
+            total.add((u.total()));
+            log.info("NAME ROLE: "+ u.name() + "  DESCRIPTION: " + u.description() + " TOTAL:" + u.total());
+        });
+        log.info("LABELS: " + labelRoles);
+        log.info("SERIES: " + total);
+        return  new TotalUserByRolResponseRecord(labelRoles, total);
     }
 }

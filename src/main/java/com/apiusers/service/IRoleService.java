@@ -3,6 +3,7 @@ package com.apiusers.service;
 import com.apiusers.record.request.RoleRequestRecord;
 import com.apiusers.record.response.ResponseMessageRecord;
 import com.apiusers.record.response.RoleResponseRecord;
+import com.apiusers.record.response.TotalUserByRolResponseRecord;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface IRoleService {
     ResponseMessageRecord create(RoleRequestRecord data);
     ResponseMessageRecord update(Long id, RoleRequestRecord data);
     ResponseMessageRecord delete(Long id);
+
+    TotalUserByRolResponseRecord findTotalRoles();
 }

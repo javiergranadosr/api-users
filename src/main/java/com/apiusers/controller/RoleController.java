@@ -3,6 +3,7 @@ package com.apiusers.controller;
 import com.apiusers.record.request.RoleRequestRecord;
 import com.apiusers.record.response.ResponseMessageRecord;
 import com.apiusers.record.response.RoleResponseRecord;
+import com.apiusers.record.response.TotalUserByRolResponseRecord;
 import com.apiusers.service.IRoleService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -41,6 +42,11 @@ public class RoleController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RoleResponseRecord> findById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(this.service.findById(id), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/totals", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TotalUserByRolResponseRecord> findTotalRoles(){
+        return ResponseEntity.status(HttpStatus.OK).body(this.service.findTotalRoles());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
